@@ -28,10 +28,17 @@
     </div>
 
     <div class="post-footer">
-        <form action="{{ route('like.toggle', $post->id) }}" method="POST">
+        <form
+            action="{{ route('like.toggle', $post->id) }}"
+            method="POST"
+            style="display:inline;"
+            id="like-form-{{ $post->id }}"
+            hx-post="{{ route('like.toggle', $post->id) }}"
+            hx-select="#like-form-{{ $post->id }}"
+            hx-swap="outerHTML">
             @csrf
             <button type="submit" class="link">
-                {{ $post->likes->contains('id', 1) ? '❤️' : '🤍' }} {{ $post->likes->count() }}
+                {{ $post->likes->contains('id', auth()->id()) ? '❤️' : '🤍' }} {{ $post->likes->count() }}
             </button>
         </form>
 
