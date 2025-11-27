@@ -13,20 +13,7 @@
 <h3 style="margin: 20px 0 10px;">Posts by {{ $user->name }}</h3>
 
 @foreach($posts as $post)
-<div class="box">
-    <div class="post-header">
-        <span>{{ $post->created_at->diffForHumans() }}</span>
-    </div>
-    <div class="post-content">
-        {{ $post->content }}
-    </div>
-    <div class="post-footer">
-        <span>❤️ {{ $post->likes->count() }} Likes</span>
-        <a href="{{ route('post.show', $post->id) }}" style="text-decoration: none; color: #555; margin-left: 15px;">
-            💬 {{ $post->comments->count() }} Comments
-        </a>
-    </div>
-</div>
+<x-post-card :post="$post" />
 @endforeach
 
 @endsection

@@ -2,42 +2,14 @@
 
 @section('content')
 
+<x-post-card :post="$post" />
+
 <div class="box">
-    <div class="post-header">
-        <a href="{{ route('profile.show', $post->user->id) }}">{{ $post->user->name }}</a>
-        <span>{{ $post->created_at->diffForHumans() }}</span>
-
-        @if(auth()->id() === $post->user_id)
-        <div style="font-size: 0.8rem; margin-left: auto;">
-            <a href="{{ route('post.edit', $post->id) }}" style="text-decoration: none; color: #1877f2; margin-right: 10px;">Edit</a>
-            <form action="{{ route('post.delete', $post->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Delete post?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; padding: 0;">Delete</button>
-            </form>
-        </div>
-        @endif
-    </div>
-
-    <div class="post-content" style="font-size: 1.2rem;">
-        {{ $post->content }}
-    </div>
-
-    <div class="post-footer">
-        <form action="{{ route('like.toggle', $post->id) }}" method="POST">
-            @csrf
-            <button type="submit" class="link">
-                {{ $post->likes->contains('user_id', Auth::id()) ? '❤️' : '🤍' }} {{ $post->likes->count() }}
-            </button>
-        </form>
-    </div>
-
     <div class="comment-section">
         <h3>Comments</h3>
 
         @foreach($post->comments as $comment)
         <div class="single-comment" style="margin-bottom: 15px;">
-
             <div id="comment-display-{{ $comment->id }}" style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                     <strong>{{ $comment->user->name }}</strong>: {{ $comment->content }}
@@ -67,7 +39,6 @@
                 </div>
             </form>
             @endif
-
         </div>
         @endforeach
 
@@ -77,21 +48,21 @@
             <button type="submit" class="primary" style="font-size: 0.8rem;">Reply</button>
         </form>
     </div>
-
-    <script>
-        function toggleEdit(id) {
-            var display = document.getElementById('comment-display-' + id);
-            var form = document.getElementById('comment-edit-' + id);
-
-            if (display.style.display === 'none') {
-                display.style.display = 'flex';
-                form.style.display = 'none';
-            } else {
-                display.style.display = 'none';
-                form.style.display = 'block';
-            }
-        }
-    </script>
 </div>
+
+<script>
+    function toggleEdit(id) {
+        var display = document.getElementById('comment-display-' + id);
+        var form = document.getElementById('comment-edit-' + id);
+
+        if (display.style.display === 'none') {
+            display.style.display = 'flex';
+            form.style.display = 'none';
+        } else {
+            display.style.display = 'none';
+            form.style.display = 'block';
+        }
+    }
+</script>
 
 @endsection
