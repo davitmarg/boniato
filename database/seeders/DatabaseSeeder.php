@@ -6,12 +6,13 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\Like;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::factory(10)->create();
+        $users = User::factory(20)->create();
 
         foreach ($users as $user) {
             $posts = Post::factory(3)->create([
@@ -19,10 +20,19 @@ class DatabaseSeeder extends Seeder
             ]);
 
             foreach ($posts as $post) {
-                Comment::factory(rand(1, 4))->create([
+                Comment::factory(rand(5, 10))->create([
                     'post_id' => $post->id,
                     'user_id' => $users->random()->id
                 ]);
+
+                $likers = $users->random(rand(3, 8));
+
+                foreach ($likers as $liker) {
+                    Like::factory()->create([
+                        'user_id' => $liker->id,
+                        'post_id' => $post->id
+                    ]);
+                }
             }
         }
     }
