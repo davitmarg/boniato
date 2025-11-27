@@ -26,7 +26,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/post/{id}/edit', [FeedController::class, 'editPost'])->name('post.edit');
     Route::put('/post/{id}', [FeedController::class, 'updatePost'])->name('post.update');
     Route::delete('/post/{id}', [FeedController::class, 'deletePost'])->name('post.delete');
-
     Route::put('/comment/{id}', [FeedController::class, 'updateComment'])->name('comment.update');
     Route::delete('/comment/{id}', [FeedController::class, 'deleteComment'])->name('comment.delete');
 });

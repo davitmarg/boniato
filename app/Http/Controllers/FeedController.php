@@ -131,7 +131,9 @@ class FeedController extends Controller
         $post = Post::findOrFail($postId);
         $post->likes()->toggle(Auth::id());
 
-        return back();
+        $post->load('likes');
+
+        return view('partials.like-button', compact('post'));
     }
 
     public function editPost($id)
