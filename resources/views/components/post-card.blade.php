@@ -20,7 +20,7 @@
     </div>
 
     <div class="post-content">
-        {{ $post->content }}
+        {!! $post->content !!}
     </div>
 
     <div class="post-footer">
