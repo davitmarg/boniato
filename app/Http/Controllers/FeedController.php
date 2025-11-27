@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class FeedController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with(['user', 'comments', 'likes'])->latest()->get();
+        $posts = Post::with(['user', 'comments', 'likes'])
+            ->latest()
+            ->paginate(4);
+
+        if ($request->header('HX-Request')) {
+            return view('partials.feed', compact('posts'));
+        }
+
         return view('home', compact('posts'));
     }
 

@@ -6,8 +6,8 @@
 <x-post-form />
 @endauth
 
-@foreach($posts as $post)
-<x-post-card :post="$post" />
-@endforeach
+<div id="feed-container">
+    @include('partials.feed')
+</div>
 
 @endsection
