@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class FeedController extends Controller
 {
@@ -38,7 +39,7 @@ class FeedController extends Controller
         $request->validate(['content' => 'required']);
 
         Post::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'content' => $request->content
         ]);
 
@@ -50,7 +51,7 @@ class FeedController extends Controller
         $request->validate(['content' => 'required']);
 
         Comment::create([
-            'user_id' => auth()->id(),
+            'user_id' => Auth::id(),
             'post_id' => $postId,
             'content' => $request->content
         ]);
@@ -60,7 +61,7 @@ class FeedController extends Controller
 
     public function toggleLike($postId)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $post = Post::find($postId);
         $post->likes()->toggle($user->id);
 
