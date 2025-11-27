@@ -17,7 +17,7 @@
 
                 @if(Auth::id() === $comment->user_id)
                 <div style="font-size: 0.8rem; min-width: 80px; text-align: right;">
-                    <button onclick="toggleEdit({{ $comment->id }})" style="background: none; border: none; color: #1877f2; cursor: pointer; padding: 0; margin-right: 5px; font-family: inherit; font-size: inherit;">Edit</button>
+                    <button class="edit-btn" data-comment-id="{{ $comment->id }}" style="background: none; border: none; color: #1877f2; cursor: pointer; padding: 0; margin-right: 5px; font-family: inherit; font-size: inherit;">Edit</button>
 
                     <form action="{{ route('comment.delete', $comment->id) }}" method="POST" style="display: inline;">
                         @csrf
@@ -35,7 +35,7 @@
                 <div style="display: flex; gap: 5px;">
                     <input type="text" name="content" value="{{ $comment->content }}" style="flex: 1; padding: 5px;">
                     <button type="submit" class="primary" style="font-size: 0.8rem; padding: 5px 10px;">Save</button>
-                    <button type="button" onclick="toggleEdit({{ $comment->id }})" style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-size: 0.8rem;">Cancel</button>
+                    <button type="button" class="cancel-btn" data-comment-id="{{ $comment->id }}" style="border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; padding: 5px 10px; font-size: 0.8rem;">Cancel</button>
                 </div>
             </form>
             @endif
@@ -63,6 +63,18 @@
             form.style.display = 'block';
         }
     }
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleEdit(this.dataset.commentId);
+        });
+    });
+
+    document.querySelectorAll('.cancel-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleEdit(this.dataset.commentId);
+        });
+    });
 </script>
 
 @endsection

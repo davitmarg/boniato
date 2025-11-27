@@ -7,7 +7,7 @@
         @method('PUT')
         @endif
 
-        <textarea name="content" placeholder="What is happening?!" style="{{ $post ? 'height: 150px;' : '' }}">{{ $post ? $post->content : '' }}</textarea>
+        <textarea name="content" placeholder="What is happening?!" @if($post) style="height: 150px;" @endif>{{ $post ? $post->content : '' }}</textarea>
 
         <div style="text-align: right; margin-top: 10px;">
             @if($post)
