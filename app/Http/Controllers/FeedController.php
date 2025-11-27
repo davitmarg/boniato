@@ -46,6 +46,36 @@ class FeedController extends Controller
         return back();
     }
 
+    public function updatePost(Request $request, $id)
+    {
+        $post = Post::findOrFail($id);
+
+        if (Auth::id() !== $post->user_id) {
+            abort(403);
+        }
+
+        $request->validate(['content' => 'required']);
+
+        $post->update([
+            'content' => $request->content
+        ]);
+
+        return redirect()->route('post.show', $post->id);
+    }
+
+    public function deletePost($id)
+    {
+        $post = Post::findOrFail($id);
+
+        if (Auth::id() !== $post->user_id) {
+            abort(403);
+        }
+
+        $post->delete();
+
+        return redirect()->route('home');
+    }
+
     public function storeComment(Request $request, $postId)
     {
         $request->validate(['content' => 'required']);
@@ -59,12 +89,52 @@ class FeedController extends Controller
         return back();
     }
 
-    public function toggleLike($postId)
+    public function updateComment(Request $request, $id)
     {
-        $user = Auth::user();
-        $post = Post::find($postId);
-        $post->likes()->toggle($user->id);
+        $comment = Comment::findOrFail($id);
+
+        if (Auth::id() !== $comment->user_id) {
+            abort(403);
+        }
+
+        $request->validate(['content' => 'required']);
+
+        $comment->update([
+            'content' => $request->content
+        ]);
 
         return back();
+    }
+
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        if (Auth::id() !== $comment->user_id) {
+            abort(403);
+        }
+
+        $comment->delete();
+
+        return back();
+    }
+
+    public function toggleLike($postId)
+    {
+        $post = Post::findOrFail($postId);
+        $post->likes()->toggle(Auth::id());
+
+        return back();
+    }
+
+    public function editPost($id)
+    {
+        $post = Post::findOrFail($id);
+
+        if (Auth::id() !== $post->user_id) {
+            abort(403);
+        }
+
+        return view('post.edit', compact('post'));
     }
 }

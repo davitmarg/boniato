@@ -23,4 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/post', [FeedController::class, 'storePost'])->name('post.store');
     Route::post('/comment/{postId}', [FeedController::class, 'storeComment'])->name('comment.store');
     Route::post('/like/{postId}', [FeedController::class, 'toggleLike'])->name('like.toggle');
+    Route::get('/post/{id}/edit', [FeedController::class, 'editPost'])->name('post.edit');
+    Route::put('/post/{id}', [FeedController::class, 'updatePost'])->name('post.update');
+    Route::delete('/post/{id}', [FeedController::class, 'deletePost'])->name('post.delete');
+
+    Route::put('/comment/{id}', [FeedController::class, 'updateComment'])->name('comment.update');
+    Route::delete('/comment/{id}', [FeedController::class, 'deleteComment'])->name('comment.delete');
 });
