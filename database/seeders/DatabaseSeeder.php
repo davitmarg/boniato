@@ -20,10 +20,14 @@ class DatabaseSeeder extends Seeder
             ]);
 
             foreach ($posts as $post) {
-                Comment::factory(rand(5, 10))->create([
-                    'post_id' => $post->id,
-                    'user_id' => $users->random()->id
-                ]);
+                $commenters = $users->random(rand(5, 10));
+
+                foreach ($commenters as $commenter) {
+                    Comment::factory()->create([
+                        'post_id' => $post->id,
+                        'user_id' => $commenter->id
+                    ]);
+                }
 
                 $likers = $users->random(rand(3, 8));
 
