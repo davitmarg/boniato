@@ -46,7 +46,7 @@ class FeedController extends Controller
     public function showProfile($id)
     {
         $user = User::findOrFail($id);
-        $posts = $user->posts()->with(['likes', 'comments'])->latest()->get();
+        $posts = $user->posts()->with(['user', 'likes', 'comments'])->latest()->get();
         return view('profile', compact('user', 'posts'));
     }
 
