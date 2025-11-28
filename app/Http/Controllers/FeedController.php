@@ -18,11 +18,17 @@ class FeedController extends Controller
 
         $key = "feed_user:{$userId}_page:{$page}_type:{$type}";
 
-        return Cache::remember($key, 10, function () use ($request) {
+        return Cache::remember($key, 20, function () use ($request) {
 
-            $posts = Post::with(['user', 'comments', 'likes'])
-                ->latest()
-                ->paginate(4);
+            $page = $request->get('page', 1);
+
+            $key = "posts_data_page:{$page}";
+
+            $posts = Cache::remember($key, 40, function () {
+                return Post::with(['user', 'comments', 'likes'])
+                    ->latest()
+                    ->paginate(4);
+            });
 
             if ($request->header('HX-Request')) {
                 return view('partials.feed', compact('posts'))->render();
