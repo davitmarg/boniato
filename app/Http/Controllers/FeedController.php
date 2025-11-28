@@ -51,6 +51,23 @@ class FeedController extends Controller
     }
 
 
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if (Auth::id() !== $user->id) {
+            abort(403);
+        }
+
+        $request->validate(['name' => 'required|max:255']);
+
+        $user->update([
+            'name' => $request->name
+        ]);
+
+        return back();
+    }
+
 
     public function toggleLike($postId)
     {

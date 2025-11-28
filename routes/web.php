@@ -21,6 +21,7 @@ Route::middleware('guest')->group(function () {
 
 // (Only accessible if logged in)
 Route::middleware('auth')->group(function () {
+    Route::put('/user/{id}', [FeedController::class, 'updateUser'])->name('user.update');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/post', [FeedController::class, 'storePost'])->name('post.store');
     Route::post('/comment/{postId}', [CommentController::class, 'storeComment'])->name('comment.store');
