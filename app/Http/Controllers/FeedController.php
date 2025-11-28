@@ -12,14 +12,12 @@ class FeedController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Create a unique cache key based on User, Page, and Request Type
         $userId = Auth::id() ?? 'guest';
         $page = $request->get('page', 1);
         $type = $request->header('HX-Request') ? 'partial' : 'full';
 
         $key = "feed_user:{$userId}_page:{$page}_type:{$type}";
 
-        // 2. Cache the rendered view for 10 seconds
         return Cache::remember($key, 10, function () use ($request) {
 
             $posts = Post::with(['user', 'comments', 'likes'])
