@@ -4,23 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class FeedController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = Post::with(['user', 'comments', 'likes'])
-            ->latest()
-            ->paginate(4);
+        // 1. Create a unique cache key based on User, Page, and Request Type
+        $userId = Auth::id() ?? 'guest';
+        $page = $request->get('page', 1);
+        $type = $request->header('HX-Request') ? 'partial' : 'full';
 
-        if ($request->header('HX-Request')) {
-            return view('partials.feed', compact('posts'));
-        }
+        $key = "feed_user:{$userId}_page:{$page}_type:{$type}";
 
-        return view('home', compact('posts'));
+        // 2. Cache the rendered view for 10 seconds
+        return Cache::remember($key, 10, function () use ($request) {
+
+            $posts = Post::with(['user', 'comments', 'likes'])
+                ->latest()
+                ->paginate(4);
+
+            if ($request->header('HX-Request')) {
+                return view('partials.feed', compact('posts'))->render();
+            }
+
+            return view('home', compact('posts'))->render();
+        });
     }
 
     public function showLogin()
