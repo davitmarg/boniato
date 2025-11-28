@@ -35,96 +35,7 @@ class FeedController extends Controller
         return view('profile', compact('user', 'posts'));
     }
 
-    public function showPost($id)
-    {
-        $post = Post::with(['user', 'comments.user', 'likes'])->findOrFail($id);
-        return view('post.show', compact('post'));
-    }
 
-    public function storePost(Request $request)
-    {
-        $request->validate(['content' => 'required']);
-
-        Post::create([
-            'user_id' => Auth::id(),
-            'content' => $request->content
-        ]);
-
-        return back();
-    }
-
-    public function updatePost(Request $request, $id)
-    {
-        $post = Post::findOrFail($id);
-
-        if (Auth::id() !== $post->user_id) {
-            abort(403);
-        }
-
-        $request->validate(['content' => 'required']);
-
-        $post->update([
-            'content' => $request->content
-        ]);
-
-        return redirect()->route('post.show', $post->id);
-    }
-
-    public function deletePost($id)
-    {
-        $post = Post::findOrFail($id);
-
-        if (Auth::id() !== $post->user_id) {
-            abort(403);
-        }
-
-        $post->delete();
-
-        return redirect()->route('home');
-    }
-
-    public function storeComment(Request $request, $postId)
-    {
-        $request->validate(['content' => 'required']);
-
-        Comment::create([
-            'user_id' => Auth::id(),
-            'post_id' => $postId,
-            'content' => $request->content
-        ]);
-
-        return back();
-    }
-
-    public function updateComment(Request $request, $id)
-    {
-        $comment = Comment::findOrFail($id);
-
-        if (Auth::id() !== $comment->user_id) {
-            abort(403);
-        }
-
-        $request->validate(['content' => 'required']);
-
-        $comment->update([
-            'content' => $request->content
-        ]);
-
-        return back();
-    }
-
-    public function deleteComment($id)
-    {
-        $comment = Comment::findOrFail($id);
-
-        if (Auth::id() !== $comment->user_id) {
-            abort(403);
-        }
-
-        $comment->delete();
-
-        return back();
-    }
 
     public function toggleLike($postId)
     {
@@ -134,16 +45,5 @@ class FeedController extends Controller
         $post->load('likes');
 
         return view('partials.like-button', compact('post'));
-    }
-
-    public function editPost($id)
-    {
-        $post = Post::findOrFail($id);
-
-        if (Auth::id() !== $post->user_id) {
-            abort(403);
-        }
-
-        return view('post.edit', compact('post'));
     }
 }
